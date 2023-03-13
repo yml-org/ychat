@@ -23,7 +23,6 @@ class MainViewModel(private val chatGpt: YChat) : ViewModel() {
 
     private val imageGenerations by lazy {
         chatGpt.imageGenerations()
-            .setResults(2)
     }
 
     private val _items = mutableStateListOf<MessageItem>()

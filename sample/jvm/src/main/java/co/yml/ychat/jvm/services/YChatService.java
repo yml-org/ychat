@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.concurrent.CompletableFuture;
 import co.yml.ychat.YChat;
+import co.yml.ychat.domain.model.ImageGenerated;
 
 @Service
 public class YChatService {
@@ -33,6 +34,13 @@ public class YChatService {
                 .addMessage("system", content)
                 .execute(input, new CompletionCallbackResult<>(future));
         return future.get().get(0).getContent();
+    }
+
+    public String getImageGenerationsAnswer(String prompt) throws Exception {
+        final CompletableFuture<List<String>> future = new CompletableFuture<>();
+        ychat.imageGenerations()
+                .execute(prompt, new CompletionCallbackResult<>(future));
+        return future.get().get(0);
     }
 
     private static class CompletionCallbackResult<T> implements YChat.Callback<T> {

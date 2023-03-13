@@ -1,7 +1,6 @@
 package co.yml.ychat.entrypoint.impl
 
 import co.yml.ychat.YChat
-import co.yml.ychat.domain.model.ChatCompletionsParams
 import co.yml.ychat.domain.model.ImageGenerated
 import co.yml.ychat.domain.model.ImageGenerationsParams
 import co.yml.ychat.domain.usecases.ImageGenerationsUseCase
