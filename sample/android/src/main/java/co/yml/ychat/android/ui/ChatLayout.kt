@@ -77,9 +77,15 @@ fun ChatLayout(
             .padding(spaceMedium),
     ) {
         items(messages) { message ->
-            MessageItemLayout(
-                messageText = message.message, isOut = message.isOut
-            )
+            message.url?.let {
+                ImageItemLayout(
+                    messageText = message.url, isOut = message.isOut
+                )
+            } ?: run {
+                MessageItemLayout(
+                    messageText = message.message, isOut = message.isOut
+                )
+            }
         }
         coroutineScope.launch {
             listState.animateScrollToItem(messages.size)

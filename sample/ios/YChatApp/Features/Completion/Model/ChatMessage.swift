@@ -12,6 +12,7 @@ struct ChatMessage: Identifiable, Equatable {
     let id: String
     var message: String = ""
     var type: MessageType = .human(error: false)
+    var url: String?
 
     enum MessageType: Equatable {
         case human(error: Bool), bot, loading

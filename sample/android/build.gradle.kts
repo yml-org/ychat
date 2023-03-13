@@ -53,6 +53,7 @@ dependencies {
     implementation(Dependencies.UI.COMPOSE_ACTIVITY)
     implementation(Dependencies.UI.COMPOSE_NAVIGATION)
     implementation(Dependencies.UI.COMPOSE_LIVEDATA)
+    implementation(Dependencies.UI.COIL)
     implementation(Dependencies.DI.KOIN_CORE)
     implementation(Dependencies.DI.KOIN_ANDROID)
     implementation(Dependencies.DI.KOIN_COMPOSE)

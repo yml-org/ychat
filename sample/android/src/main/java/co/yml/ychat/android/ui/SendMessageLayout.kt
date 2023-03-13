@@ -52,6 +52,8 @@ fun SendMessageLayout() {
     val scope = rememberCoroutineScope()
     val viewModel = koinViewModel<MainViewModel>()
     val isLoading: Boolean by viewModel.isLoading.observeAsState(initial = false)
+
+
     Row(
         modifier = Modifier
             .background(color = MaterialTheme.colors.background)
@@ -91,7 +93,11 @@ fun SendMessageLayout() {
                     .background(if (textFieldState.isNotEmpty() && isLoading.not()) colorResource(id = R.color.softBlue) else colorResource(id = R.color.opaqueWhite)),
                 onClick = {
                     scope.launch {
-                        viewModel.onSendMessage(textFieldState, typingString)
+                        if (textFieldState.startsWith("/image ")) {
+                            viewModel.onImageRequest(textFieldState, typingString)
+                        } else {
+                            viewModel.onSendMessage(textFieldState, typingString)
+                        }
                         textFieldState = ""
                     }
                 },

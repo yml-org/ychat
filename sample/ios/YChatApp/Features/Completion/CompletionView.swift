@@ -72,9 +72,14 @@ private extension CompletionView {
             }
         case .bot:
             HStack {
-                botChatBubble(message: chatMessage.message)
-                Spacer().frame(width: 60)
-                Spacer()
+                if let imageUrl = chatMessage.url {
+                    botImageBubble(imageUrl)
+                    Spacer()
+                } else {
+                    botChatBubble(message: chatMessage.message)
+                    Spacer().frame(width: 60)
+                    Spacer()
+                }
             }
         case .loading:
             HStack {
@@ -113,6 +118,28 @@ private extension CompletionView {
                     .foregroundColor(.grayDark)
                     .style(.body)
                     .multilineTextAlignment(.leading)
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 8)
+            .background(Color.grayLight)
+            .cornerRadius(16, corners: [.bottomLeft, .bottomLeft, .topRight])
+        }
+    }
+    
+    @ViewBuilder
+    private func botImageBubble(_ url: String) -> some View {
+        HStack(alignment: .top, spacing: 4) {
+            Circle()
+                .fill(.green)
+                .frame(width: 40, height: 40)
+                .overlay {
+                    Image(uiImage: Icon.bot.uiImage)
+                        .renderingMode(.template)
+                        .foregroundColor(.white)
+                }
+            ZStack {
+                AsyncImage(url: URL(string: url))
+                    .foregroundColor(.grayDark)
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 8)

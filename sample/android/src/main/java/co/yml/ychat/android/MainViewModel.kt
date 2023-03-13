@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.yml.ychat.YChat
+import co.yml.ychat.YChat.Callback
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -20,6 +21,10 @@ class MainViewModel(private val chatGpt: YChat) : ViewModel() {
             )
     }
 
+    private val imageGenerations by lazy {
+        chatGpt.imageGenerations()
+    }
+
     private val _items = mutableStateListOf<MessageItem>()
     val items = _items
 
@@ -30,7 +35,7 @@ class MainViewModel(private val chatGpt: YChat) : ViewModel() {
     private var typingItem = mutableStateOf(MessageItem(message = typingTxt.value, isOut = false))
 
     private fun setLoading(isLoading: Boolean) {
-        _isLoading.value = isLoading
+        _isLoading.postValue(isLoading)
     }
 
     fun onSendMessage(message: String, typingStr: String) {
@@ -38,6 +43,22 @@ class MainViewModel(private val chatGpt: YChat) : ViewModel() {
         viewModelScope.launch {
             showTypingAnimation(message)
             writeResponse(requestCompletion(message))
+        }
+    }
+
+    fun onImageRequest(prompt: String, typingStr: String) {
+        updateTypingMessage(typingStr)
+        viewModelScope.launch {
+            showTypingAnimation(prompt)
+            imageGenerations.execute(prompt, object : Callback<List<String>> {
+                override fun onSuccess(result: List<String>) {
+                    showImages(result)
+                }
+
+                override fun onError(throwable: Throwable) {
+                    writeResponse(ERROR)
+                }
+            })
         }
     }
 
@@ -51,6 +72,14 @@ class MainViewModel(private val chatGpt: YChat) : ViewModel() {
     private fun writeResponse(chatGptAnswer: String) {
         items.remove(items[items.lastIndex])
         items.add(MessageItem(message = chatGptAnswer, isOut = false))
+        setLoading(false)
+    }
+
+    private fun showImages(result: List<String>) {
+        items.remove(items[items.lastIndex])
+        result.forEach {
+            items.add(MessageItem(message = IMAGE, isOut = false, url = it))
+        }
         setLoading(false)
     }
 
@@ -77,5 +106,6 @@ class MainViewModel(private val chatGpt: YChat) : ViewModel() {
     companion object {
         private const val ERROR = "Error"
         private const val MAX_TOKENS = 1024
+        private const val IMAGE = "image"
     }
 }

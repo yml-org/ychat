@@ -2,6 +2,7 @@ package co.yml.ychat
 
 import co.yml.ychat.entrypoint.features.ChatCompletions
 import co.yml.ychat.entrypoint.features.Completion
+import co.yml.ychat.entrypoint.features.ImageGenerations
 import co.yml.ychat.entrypoint.impl.YChatImpl
 import kotlin.jvm.JvmStatic
 import kotlin.jvm.Volatile
@@ -76,6 +77,8 @@ interface YChat {
      * @return A new instance of the `ChatCompletions` class.
      */
     fun chatCompletions(): ChatCompletions
+
+    fun imageGenerations(): ImageGenerations
 
     /**
      * Callback is an interface used for handling the results of an operation.
